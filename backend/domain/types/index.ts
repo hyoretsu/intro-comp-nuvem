@@ -33,10 +33,11 @@ export enum LiteraryWorkType {
 	WEBTOON = "webtoon",
 }
 
-export type Media =
-	| Omit<LiteraryWorkChapter, "createdAt" | "updatedAt">
-	| Omit<Movie, "createdAt" | "updatedAt">
-	| Omit<VideoGame, "createdAt" | "updatedAt">
-	| Omit<Video, "createdAt" | "updatedAt">;
+export type Media = {
+	id: string;
+	title: Record<string, string[]> | null;
+	category: string;
+	releaseDate: Date | null;
+};
 
 export type IntlField = Record<string, string[]>;

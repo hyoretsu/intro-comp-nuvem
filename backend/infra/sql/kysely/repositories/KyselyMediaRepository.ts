@@ -86,7 +86,7 @@ export class KyselyMediaRepository implements MediaRepository {
 	public async find(shallow: boolean, category?: Category, filters?: FindFilters): Promise<Media[]> {
 		let query: SelectQueryBuilder<DB, any, any>;
 		if (shallow) {
-			query = this.db.selectFrom("EntertainmentMedia").selectAll();
+			query = this.db.selectFrom("EntertainmentMedia").select(["id", "title", "category", "releaseDate"]);
 			if (category) {
 				query = query.where("category", "=", category);
 			}

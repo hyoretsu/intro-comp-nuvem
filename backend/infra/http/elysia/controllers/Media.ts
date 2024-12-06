@@ -30,7 +30,8 @@ export const MediaController = new Elysia()
 				response: t.Array(
 					t.Object({
 						id: t.String(),
-						title: t.Nullable(t.Record(t.String(), t.Union([t.String(), t.Array(t.String())]))),
+						title: t.Nullable(t.Record(t.String(), t.Union([t.Array(t.String())]))),
+						category: t.String(),
 						releaseDate: t.Nullable(t.Date()),
 					}),
 					{ description: "List of media." },
