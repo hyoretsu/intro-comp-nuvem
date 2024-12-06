@@ -58,7 +58,7 @@ export class KyselyUsersRepository implements UsersRepository {
 				userQuery
 					.innerJoin("UserVideo as uv", "uv.userId", "u.id")
 					.leftJoin("Video as v", "v.id", "uv.videoId")
-					.select(({ fn }) => fn.sum(fn.coalesce("uv.timeSpent", "v.duration")).as("watchTime"))
+					.select(({ fn }) => fn.sum(fn.coalesce("uv.progress", "v.duration")).as("watchTime"))
 					.executeTakeFirst(),
 			);
 		}
@@ -92,13 +92,13 @@ export class KyselyUsersRepository implements UsersRepository {
 			case Category.MOVIE:
 				await this.db
 					.insertInto("UserMovie")
-					.values({ ...data, movieId: mediaId })
+					.values({ ...data, ...(timeSpent ? { progress: Number(timeSpent) } : {}), movieId: mediaId })
 					.execute();
 				break;
 			case Category.VIDEO:
 				await this.db
 					.insertInto("UserVideo")
-					.values({ ...data, timeSpent, videoId: mediaId })
+					.values({ ...data, progress: timeSpent, videoId: mediaId })
 					.execute();
 				break;
 			case Category.VIDEO_GAME:

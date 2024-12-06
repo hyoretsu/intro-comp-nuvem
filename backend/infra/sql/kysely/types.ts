@@ -62,6 +62,7 @@ export type UserMovie = {
 	id: Generated<string>;
 	userId: string;
 	movieId: string;
+	progress: number | null;
 	when: Timestamp | null;
 	rating: number | null;
 	bookmarked: Generated<boolean>;
@@ -71,7 +72,7 @@ export type UserVideo = {
 	userId: string;
 	videoId: string;
 	when: Timestamp | null;
-	timeSpent: string | null;
+	progress: string | null;
 	bookmarked: Generated<boolean>;
 };
 export type UserVideoGame = {

@@ -20,7 +20,7 @@ model LiteraryWork {
     tags        String[]              @db.VarChar(30)
     releaseDate DateTime?             @db.Date
     averageTime Int?                  @db.SmallInt
-    ongoing     Boolean               @default(true) @db.Boolean
+    ongoing     Boolean               @default(true)
     chapters    LiteraryWorkChapter[]
     createdAt   DateTime              @default(now())
     updatedAt   DateTime              @default(now())
@@ -54,7 +54,7 @@ view EntertainmentMedia {
 model Movie {
     id          BigInt      @id @default(dbgenerated("generate_tsid('Movie')"))
     title       Json        @db.JsonB // { "languageCode": string[] }
-    duration    Int?
+    duration    Int?        @db.SmallInt
     releaseDate DateTime?   @db.Date
     watchedBy   UserMovie[]
     createdAt   DateTime    @default(now())
@@ -90,6 +90,7 @@ model UserMovie {
     user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     movieId    BigInt
     movie      Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
+    progress   Int?      @db.SmallInt
     when       DateTime? @db.Timestamptz(0)
     rating     Decimal?  @db.Decimal(3, 1)
     bookmarked Boolean   @default(false)
@@ -102,7 +103,7 @@ model UserVideo {
     videoId    BigInt
     video      Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
     when       DateTime? @db.Timestamptz(0)
-    timeSpent  BigInt?
+    progress   BigInt?
     bookmarked Boolean   @default(false)
 }
 
@@ -121,8 +122,8 @@ model UserVideoGame {
 
 model Video {
     id          BigInt         @id @default(dbgenerated("generate_tsid('Video')"))
-    title       Json           @db.JsonB // { "languageCode": string[] }
-    link        String?        @db.Text
+    title       Json           @db.JsonB // { "languageCode": string }
+    link        String?
     releaseDate DateTime?      @db.Date
     duration    BigInt?
     channelId   BigInt
@@ -136,9 +137,9 @@ model Video {
 
 model VideoChannel {
     id         BigInt          @id @default(dbgenerated("generate_tsid('VideoChannel')"))
-    name       String          @db.Text
-    link       String?         @db.Text
-    externalId String?         @db.Text
+    name       String
+    link       String?
+    externalId String?
     videos     Video[]
     playlists  VideoPlaylist[]
     createdAt  DateTime        @default(now())
@@ -147,7 +148,7 @@ model VideoChannel {
 
 model VideoGame {
     id          BigInt          @id @default(dbgenerated("generate_tsid('Game')"))
-    title       Json            @db.JsonB // { "languageCode": string[] }
+    title       Json            @db.JsonB // { "languageCode": string }
     releaseDate DateTime?       @db.Date
     playedBy    UserVideoGame[]
     createdAt   DateTime        @default(now())
@@ -156,8 +157,8 @@ model VideoGame {
 
 model VideoPlaylist {
     id        BigInt        @id @default(dbgenerated("generate_tsid('VideoPlaylist')"))
-    title     String        @db.Text
-    link      String?       @db.Text
+    title     String
+    link      String?
     videos    Video[]
     channelId BigInt?
     channel   VideoChannel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
