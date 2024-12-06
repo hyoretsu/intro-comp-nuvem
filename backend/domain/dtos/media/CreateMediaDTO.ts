@@ -1,4 +1,4 @@
-import type { Category, IntlField, IntlFieldArr, LiteraryWorkType } from "../../types";
+import type { Category, IntlField, LiteraryWorkType } from "../../types";
 
 export class CreateChapterDTO {
 	number!: number;
@@ -14,14 +14,14 @@ export class CreateLiteraryWorkDTO {
 	ongoing?: boolean;
 	synopsis?: IntlField;
 	tags?: string[];
-	title!: IntlFieldArr;
+	title!: IntlField;
 	type!: LiteraryWorkType;
 }
 
 export class CreateMovieDTO {
 	duration?: string;
 	releaseDate?: Date;
-	title!: IntlFieldArr;
+	title!: IntlField;
 }
 
 export class CreateVideoDTO {
@@ -32,7 +32,7 @@ export class CreateVideoDTO {
 }
 
 export class CreateVideoGameDTO {
-	title!: IntlFieldArr;
+	title!: IntlField;
 }
 
 export type CreateMediaDTO = {

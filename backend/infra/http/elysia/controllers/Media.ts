@@ -50,8 +50,8 @@ export const MediaController = new Elysia()
 								releaseDate: t.Optional(t.Date({ description: "Chapter's original release date." })),
 								sourceId: t.String({ description: "The literary work's ID." }),
 								title: t.Optional(
-									t.Record(t.String(), t.String(), {
-										description: "Titles (array) by language code.",
+									t.Record(t.String(), t.Array(t.String()), {
+										description: "Titles by language code.",
 									}),
 								),
 							},
@@ -68,11 +68,11 @@ export const MediaController = new Elysia()
 								),
 								ongoing: t.Optional(t.Boolean({ description: "Is the work not finished yet?" })),
 								synopsis: t.Optional(
-									t.Record(t.String(), t.String(), { description: "Synopsis by language code." }),
+									t.Record(t.String(), t.Array(t.String()), { description: "Synopsis by language code." }),
 								),
 								tags: t.Optional(t.Array(t.String(), { description: "Category/genre tags" })),
 								title: t.Record(t.String(), t.Array(t.String()), {
-									description: "Titles (array) by language code.",
+									description: "Titles by language code.",
 								}),
 								type: t.Enum(LiteraryWorkType),
 							},
@@ -88,7 +88,7 @@ export const MediaController = new Elysia()
 									}),
 								),
 								title: t.Record(t.String(), t.Array(t.String()), {
-									description: "Titles (array) by language code.",
+									description: "Titles by language code.",
 								}),
 							},
 							{ additionalProperties: false },
@@ -175,7 +175,7 @@ export const MediaController = new Elysia()
 							releaseDate: t.Optional(t.Date()),
 							timeSpent: t.String(),
 							when: t.Optional(t.Nullable(t.Date())),
-							title: t.Optional(t.Record(t.String(), t.String())),
+							title: t.Optional(t.Record(t.String(), t.Array(t.String()))),
 						}),
 						t.Object({
 							category: t.Literal(Category.MOVIE),

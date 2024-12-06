@@ -114,7 +114,7 @@ export class CreateMedia {
 					link: shortUrl,
 					releaseDate: new Date(publishedAt),
 					title: {
-						default: title,
+						default: [title],
 					},
 				});
 
