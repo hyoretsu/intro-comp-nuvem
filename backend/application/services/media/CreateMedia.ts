@@ -49,7 +49,7 @@ export class CreateMedia {
 
 				const { id } = await this.mediaRepository.create({
 					...rest,
-					duration: toSeconds(parse(duration)),
+					duration: duration ? toSeconds(parse(duration)) : undefined,
 				});
 
 				mediaId = id;
