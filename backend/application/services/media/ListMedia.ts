@@ -4,7 +4,15 @@ export class ListMedia {
 	constructor(private readonly mediaRepository: MediaRepository) {}
 
 	public async execute({ category, ...filters }: ListMediaDTO): Promise<Media[]> {
-		const media = await this.mediaRepository.find(true, category, filters);
+		let media: Media[];
+
+		if (filters.mediaId) {
+			media = await this.mediaRepository.find(false, category, filters);
+		} else {
+			media = await this.mediaRepository.find(true, category, filters);
+		}
+
+		console.log(media);
 
 		return media;
 	}

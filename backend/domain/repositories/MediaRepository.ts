@@ -4,6 +4,7 @@ import type { LiteraryWorkChapter, Video, VideoChannel } from "../entities";
 import type { Category, Media } from "../types";
 
 export interface FindFilters {
+	mediaId?: string;
 	title?: string;
 }
 

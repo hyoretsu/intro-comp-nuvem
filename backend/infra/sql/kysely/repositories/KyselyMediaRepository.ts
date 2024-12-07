@@ -7,7 +7,7 @@ import {
 	type Media,
 	type MediaRepository,
 } from "@enki/domain";
-import { type Kysely, type SelectQueryBuilder, sql } from "kysely";
+import { type Kysely, type OperandValueExpressionOrList, type SelectQueryBuilder, sql } from "kysely";
 import type { KeyValue } from "..";
 import type { VideoChannelSelectable, VideoChannelUpdateable, VideoSelectable } from "../entities";
 import type { DB } from "../types";
@@ -19,13 +19,22 @@ export class KyselyMediaRepository implements MediaRepository {
 		// @ts-expect-error
 		this.findQueries = {
 			[Category.LITERARY_WORK]: this.db
-				.selectFrom("LiteraryWork")
-				.select(["id", "title", "synopsis", "type", "tags", "ongoing"]),
-			[Category.MOVIE]: this.db.selectFrom("Movie").select(["id", "title", "duration", "releaseDate"]),
+				.selectFrom("LiteraryWork as media")
+				.select(["media.id", "media.title", "media.synopsis", "media.type", "media.tags", "media.ongoing"]),
+			[Category.MOVIE]: this.db
+				.selectFrom("Movie as media")
+				.select(["media.id", "media.title", "media.duration", "media.releaseDate"]),
 			[Category.VIDEO]: this.db
-				.selectFrom("Video")
-				.select(["id", "title", "link", "duration", "channelId", "playlistId"]),
-			[Category.VIDEO_GAME]: this.db.selectFrom("VideoGame").select(["id", "title"]),
+				.selectFrom("Video as media")
+				.select([
+					"media.id",
+					"media.title",
+					"media.link",
+					"media.duration",
+					"media.channelId",
+					"media.playlistId",
+				]),
+			[Category.VIDEO_GAME]: this.db.selectFrom("VideoGame as media").select(["media.id", "media.title"]),
 		};
 	}
 
@@ -86,7 +95,10 @@ export class KyselyMediaRepository implements MediaRepository {
 	public async find(shallow: boolean, category?: Category, filters?: FindFilters): Promise<Media[]> {
 		let query: SelectQueryBuilder<DB, any, any>;
 		if (shallow) {
-			query = this.db.selectFrom("EntertainmentMedia").select(["id", "title", "category", "releaseDate"]);
+			query = this.db
+				.selectFrom("EntertainmentMedia as media")
+				.select(["media.id", "media.title", "media.category", "media.releaseDate"]);
+
 			if (category) {
 				query = query.where("category", "=", category);
 			}
@@ -95,18 +107,51 @@ export class KyselyMediaRepository implements MediaRepository {
 				throw new Error("Either do a shallow search or send a category.");
 			}
 
-			query = this.findQueries[category]?.orderBy("createdAt desc");
+			query = this.findQueries[category]?.orderBy("media.createdAt desc");
 
 			if (!query) {
 				throw new Error("Media unsupported.");
 			}
+
+			if (category === Category.LITERARY_WORK) {
+				query = query
+					.leftJoin("LiteraryWorkChapter as lwc", "lwc.sourceId", "media.id")
+					.select(eb =>
+						eb.fn
+							.jsonAgg(
+								sql<Record<string, any>>`
+									jsonb_build_object(
+										'id', lwc."id",
+										'title', lwc."title",
+										'number', lwc."number",
+										'pages', lwc."pages",
+										'releaseDate', lwc."releaseDate"
+									)
+								`,
+							)
+							.as("chapters"),
+					)
+					.groupBy([
+						"media.id",
+						"media.title",
+						"media.synopsis",
+						"media.type",
+						"media.tags",
+						"media.ongoing",
+					]);
+			}
+		}
+
+		if (filters?.mediaId) {
+			// @ts-expect-error: This is correct though?
+			query = query.where("media.id", "=", filters.mediaId);
 		}
 
 		if (filters?.title) {
 			query = query.where(eb =>
 				eb.exists(
 					eb
-						.selectFrom(sql<KeyValue>`jsonb_each_text(title)`.as("kv"))
+						.selectFrom(sql<KeyValue>`jsonb_each_text(media.title)`.as("kv"))
 						.where("kv.value", "ilike", `%${filters.title}%`),
 				),
 			);

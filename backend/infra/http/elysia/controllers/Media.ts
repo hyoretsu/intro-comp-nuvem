@@ -24,17 +24,27 @@ export const MediaController = new Elysia()
 				},
 				query: t.Object({
 					category: t.Optional(t.Enum(Category, { description: "Media category." })),
+					mediaId: t.Optional(
+						t.String({
+							description: "Media ID filter. Used along with 'category' in order to get more media details.",
+						}),
+					),
 					title: t.Optional(t.String({ description: "Media title filter." })),
 				}),
 				// response: t.Array(t.Union([LiteraryWork, Movie, Video])),
 				response: t.Array(
-					t.Object({
-						id: t.String(),
-						title: t.Nullable(t.Record(t.String(), t.Union([t.Array(t.String())]))),
-						category: t.String(),
-						releaseDate: t.Nullable(t.Date()),
-					}),
-					{ description: "List of media." },
+					t.Union([
+						t.Object(
+							{
+								id: t.String(),
+								title: t.Nullable(t.Record(t.String(), t.Union([t.Array(t.String())]))),
+								category: t.String(),
+								releaseDate: t.Nullable(t.Date()),
+							},
+							{ description: "List of media." },
+						),
+						t.Record(t.String(), t.Any(), { description: "Full media information." }),
+					]),
 				),
 			})
 			.post("/", ({ body, createMedia }) => createMedia.execute(body), {
