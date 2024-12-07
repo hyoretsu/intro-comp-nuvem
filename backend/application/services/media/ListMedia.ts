@@ -12,8 +12,6 @@ export class ListMedia {
 			media = await this.mediaRepository.find(true, category, filters);
 		}
 
-		console.log(media);
-
 		return media;
 	}
 }

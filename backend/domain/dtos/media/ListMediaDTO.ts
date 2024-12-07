@@ -1,7 +1,6 @@
+import { MediaFilters } from "../../repositories";
 import type { Category } from "../../types";
 
-export class ListMediaDTO {
+export class ListMediaDTO extends MediaFilters {
 	category?: Category;
-	mediaId?: string;
-	title?: string;
 }

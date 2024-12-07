@@ -25,8 +25,8 @@ export const MediaController = new Elysia()
 				query: t.Object({
 					category: t.Optional(t.Enum(Category, { description: "Media category." })),
 					mediaId: t.Optional(
-						t.String({
-							description: "Media ID filter. Used along with 'category' in order to get more media details.",
+						t.Array(t.String(), {
+							description: "Media ID filter. When used alongside 'category', fetches more media details.",
 						}),
 					),
 					title: t.Optional(t.String({ description: "Media title filter." })),

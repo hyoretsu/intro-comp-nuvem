@@ -2,12 +2,12 @@ import {
 	Category,
 	type CreateMediaDatabaseDTO,
 	type CreateVideoChannelDTO,
-	type FindFilters,
 	type LiteraryWorkChapter,
 	type Media,
+	type MediaFilters,
 	type MediaRepository,
 } from "@enki/domain";
-import { type Kysely, type OperandValueExpressionOrList, type SelectQueryBuilder, sql } from "kysely";
+import { type Kysely, type SelectQueryBuilder, sql } from "kysely";
 import type { KeyValue } from "..";
 import type { VideoChannelSelectable, VideoChannelUpdateable, VideoSelectable } from "../entities";
 import type { DB } from "../types";
@@ -92,7 +92,7 @@ export class KyselyMediaRepository implements MediaRepository {
 		return channel;
 	}
 
-	public async find(shallow: boolean, category?: Category, filters?: FindFilters): Promise<Media[]> {
+	public async find(shallow: boolean, category?: Category, filters?: MediaFilters): Promise<Media[]> {
 		let query: SelectQueryBuilder<DB, any, any>;
 		if (shallow) {
 			query = this.db
@@ -144,7 +144,7 @@ export class KyselyMediaRepository implements MediaRepository {
 
 		if (filters?.mediaId) {
 			// @ts-expect-error: This is correct though?
-			query = query.where("media.id", "=", filters.mediaId);
+			query = query.where("media.id", "in", filters.mediaId);
 		}
 
 		if (filters?.title) {
