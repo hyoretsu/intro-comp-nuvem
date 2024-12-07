@@ -114,7 +114,7 @@ export const MediaController = new Elysia()
 					{
 						examples: [
 							{
-								cateogry: "chapter",
+								category: "chapter",
 								number: 1,
 								pages: 12,
 								releaseDate: "2024-12-25T00:00:00-03:00",
@@ -124,7 +124,7 @@ export const MediaController = new Elysia()
 								},
 							},
 							{
-								cateogry: "literary_work",
+								category: "literary_work",
 								currentChapters: 1,
 								ongoing: false,
 								synopsis: {
@@ -137,7 +137,7 @@ export const MediaController = new Elysia()
 								type: "manhua",
 							},
 							{
-								cateogry: "movie",
+								category: "movie",
 								duration: "PT2H5M30S",
 								releaseDate: "2024-12-25T00:00:00-03:00",
 								title: {
@@ -145,11 +145,11 @@ export const MediaController = new Elysia()
 								},
 							},
 							{
-								cateogry: "video",
+								category: "video",
 								link: "https://www.youtube.com/watch?v=1234",
 							},
 							{
-								cateogry: "video_game",
+								category: "video_game",
 								title: {
 									en: ["The game"],
 								},
