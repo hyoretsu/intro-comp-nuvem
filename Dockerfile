@@ -1,4 +1,4 @@
-FROM oven/bun AS backend_build
+FROM docker.io/oven/bun AS backend_build
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ WORKDIR /app
 RUN mkdir -p ./backend/application ./backend/domain ./backend/infra
 
 # Copy dependency files
-COPY bun.lockb package.json ./
+COPY bun.lock package.json ./
 COPY backend/application/package.json ./backend/application
 COPY backend/domain/package.json ./backend/domain
 COPY backend/infra/package.json ./backend/infra
@@ -30,6 +30,7 @@ WORKDIR /app
 COPY --from=backend_build /app/backend/dist/server .
 
 ENV NODE_ENV=production
+ENV PORT=${PORT:-8080}
 
 # Create a non-root user and switch to it
 USER 1000:1000
