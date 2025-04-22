@@ -21,6 +21,7 @@ export type LiteraryWork = {
     releaseDate: Timestamp | null;
     averageTime: number | null;
     ongoing: Generated<boolean>;
+    image: string | null;
     createdAt: Generated<Timestamp>;
     updatedAt: Generated<Timestamp>;
 };
@@ -32,6 +33,7 @@ export type LiteraryWorkChapter = {
     pages: number | null;
     averageTime: number | null;
     sourceId: string;
+    image: string | null;
     createdAt: Generated<Timestamp>;
     updatedAt: Generated<Timestamp>;
 };
@@ -40,6 +42,7 @@ export type Movie = {
     title: Record<string,any>;
     duration: number | null;
     releaseDate: Timestamp | null;
+    image: string | null;
     createdAt: Generated<Timestamp>;
     updatedAt: Generated<Timestamp>;
 };
@@ -86,6 +89,7 @@ export type UserVideoGame = {
 export type Video = {
     id: Generated<string>;
     title: Record<string,any>;
+    image: string | null;
     link: string | null;
     releaseDate: Timestamp | null;
     duration: string | null;
@@ -105,6 +109,7 @@ export type VideoChannel = {
 export type VideoGame = {
     id: Generated<string>;
     title: Record<string,any>;
+    image: string | null;
     releaseDate: Timestamp | null;
     createdAt: Generated<Timestamp>;
     updatedAt: Generated<Timestamp>;
