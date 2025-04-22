@@ -3,5 +3,8 @@
 	"private": true,
 	"dependencies": {
 		"@enki/infra": "workspace:*"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.2.10"
 	}
 }

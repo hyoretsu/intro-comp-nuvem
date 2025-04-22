@@ -36,6 +36,7 @@ export class CreateVideoGameDTO {
 }
 
 export type CreateMediaDTO = {
+	image?: File | string;
 	noCheck?: boolean;
 } & (
 	| (CreateChapterDTO & {

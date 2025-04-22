@@ -65,6 +65,7 @@ export const MediaController = new Elysia()
 										description: "Titles by language code.",
 									}),
 								),
+								image: t.File({ format: "image/*" }),
 							},
 							{ additionalProperties: false },
 						),
@@ -86,6 +87,7 @@ export const MediaController = new Elysia()
 									description: "Titles by language code.",
 								}),
 								type: t.Enum(LiteraryWorkType),
+								image: t.File({ format: "image/*" }),
 							},
 							{ additionalProperties: false },
 						),
@@ -101,6 +103,7 @@ export const MediaController = new Elysia()
 								title: t.Record(t.String(), t.Array(t.String()), {
 									description: "Titles by language code.",
 								}),
+								image: t.File({ format: "image/*" }),
 							},
 							{ additionalProperties: false },
 						),
@@ -108,6 +111,7 @@ export const MediaController = new Elysia()
 							{
 								category: t.Literal(Category.VIDEO),
 								link: t.String({ description: "A youtube URL.", format: "uri" }),
+								image: t.File({ format: "image/*" }),
 							},
 							{ additionalProperties: false },
 						),
@@ -117,6 +121,7 @@ export const MediaController = new Elysia()
 								title: t.Record(t.String(), t.Array(t.String()), {
 									description: "Title by language code.",
 								}),
+								image: t.File({ format: "image/*" }),
 							},
 							{ additionalProperties: false },
 						),

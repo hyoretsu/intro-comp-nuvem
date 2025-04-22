@@ -22,6 +22,7 @@ model LiteraryWork {
     averageTime Int?                  @db.SmallInt
     ongoing     Boolean               @default(true)
     chapters    LiteraryWorkChapter[]
+    image       String?
     createdAt   DateTime              @default(now())
     updatedAt   DateTime              @default(now())
 }
@@ -36,6 +37,7 @@ model LiteraryWorkChapter {
     sourceId    BigInt
     source      LiteraryWork  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
     readBy      UserChapter[]
+    image       String?
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @default(now())
 
@@ -57,6 +59,7 @@ model Movie {
     duration    Int?        @db.SmallInt
     releaseDate DateTime?   @db.Date
     watchedBy   UserMovie[]
+    image       String?
     createdAt   DateTime    @default(now())
     updatedAt   DateTime    @default(now())
 }
@@ -123,6 +126,7 @@ model UserVideoGame {
 model Video {
     id          BigInt         @id @default(dbgenerated("generate_tsid('Video')"))
     title       Json           @db.JsonB // { "languageCode": string }
+    image       String?
     link        String?
     releaseDate DateTime?      @db.Date
     duration    BigInt?
@@ -149,6 +153,7 @@ model VideoChannel {
 model VideoGame {
     id          BigInt          @id @default(dbgenerated("generate_tsid('Game')"))
     title       Json            @db.JsonB // { "languageCode": string }
+    image       String?
     releaseDate DateTime?       @db.Date
     playedBy    UserVideoGame[]
     createdAt   DateTime        @default(now())

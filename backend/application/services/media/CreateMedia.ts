@@ -1,6 +1,7 @@
 import { Category, type CreateMediaDTO, HttpException, type MediaRepository } from "@enki/domain";
 import { StatusCodes } from "http-status-codes";
 import { parse, toSeconds } from "iso8601-duration";
+import { randomUUID } from "node:crypto";
 import { youtubeClient } from "~/clients";
 import { getShortUrl } from "~/utils";
 
@@ -9,6 +10,14 @@ export class CreateMedia {
 
 	public async execute({ noCheck, ...data }: CreateMediaDTO): Promise<string> {
 		let mediaId: string;
+
+		if (data.image && data.image instanceof File) {
+			const filePath = `${randomUUID()}.jpg`;
+
+			await Bun.s3.write(filePath, data.image);
+
+			data.image = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${filePath}`;
+		}
 
 		switch (data.category) {
 			case Category.CHAPTER: {
@@ -111,6 +120,8 @@ export class CreateMedia {
 					category: Category.VIDEO,
 					channelId: channelId,
 					duration: String(toSeconds(parse(duration))),
+					// @ts-ignore
+					image: data.image,
 					link: shortUrl,
 					releaseDate: new Date(publishedAt),
 					title: {
