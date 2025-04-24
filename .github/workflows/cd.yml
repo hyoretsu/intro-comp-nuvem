@@ -63,6 +63,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
+          port: 22
           key: ${{ secrets.EC2_KEY }}
           script: |
             docker compose -f ~/apps/oficina.yaml down
