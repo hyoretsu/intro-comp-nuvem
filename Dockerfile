@@ -30,7 +30,6 @@ WORKDIR /app
 COPY --from=backend_build /app/backend/dist/server .
 
 ENV NODE_ENV=production
-ENV PORT=${PORT:-8080}
 
 # Create a non-root user and switch to it
 USER 1000:1000
@@ -39,4 +38,4 @@ USER 1000:1000
 CMD ["./server"]
 
 # Expose the application port
-EXPOSE $PORT
+EXPOSE 3333
