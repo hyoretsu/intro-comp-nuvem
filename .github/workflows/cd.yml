@@ -47,6 +47,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: .
+          platform: ${{ vars.VM_ARCH }}
           push: true
           tags: |
             hyoretsu/oficina:${{ needs.common.outputs.timestamp }}
