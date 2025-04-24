@@ -59,7 +59,7 @@ jobs:
     needs: build_docker
     steps:
       - name: SSH into the instance and update the container
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
