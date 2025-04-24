@@ -1,0 +1,68 @@
+name: CI/CD
+
+on:
+	push:
+		branches:
+		  - main
+		paths:
+		  - backend/**
+	workflow_dispatch:
+
+jobs:
+	common:
+		runs-on: ubuntu-latest
+		outputs:
+			timestamp: ${{ steps.timestamp.outputs.value }}
+		steps:
+      - name: Get timestamp
+        id: timestamp
+        run: |
+          echo "value=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
+
+	build_docker:
+		runs-on: ubuntu-latest
+		needs: common
+		steps:
+		- name: Login to Docker Hub
+			uses: docker/login-action@v3
+			with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+		- name: Checkout code
+			uses: actions/checkout@v4
+			with:
+        sparse-checkout: |
+          backend
+
+		- name: Set up QEMU
+			uses: docker/setup-qemu-action@v3
+
+		- name: Set up Docker Buildx
+			uses: docker/setup-buildx-action@v3
+
+		- name: Build and push
+			uses: docker/build-push-action@v6
+			with:
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        context: .
+				push: true
+				tags: |
+          hyoretsu/oficina:${{ needs.common.outputs.timestamp }}
+          hyoretsu/oficina:latest
+        target: backend
+
+  deploy_ec2:
+    runs-on: ubuntu-latest
+    needs: build_docker
+    steps:
+      - name: SSH into the instance and update the container
+        uses: appleboy/scp-action@1.2.0
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker compose -f ~/apps/oficina.yaml down
+            docker compose -f ~/apps/oficina.yaml up -d
